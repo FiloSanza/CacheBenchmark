@@ -59,5 +59,9 @@ public interface BenchmarkResult {
         public double getValue() {
             return value;
         }
+
+        public static Measurement create(final OperationType operation, final double value) {
+            return new Measurement(operation, value);
+        }
     }
 }
