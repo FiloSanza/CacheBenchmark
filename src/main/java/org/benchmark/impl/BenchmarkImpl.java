@@ -29,6 +29,7 @@ public class BenchmarkImpl<T> implements Benchmark {
         for (final var entry : this.cacheProviders.entrySet()) {
             final var result = this.runBenchmarkOnCacheService(entry.getValue());
             this.results.put(entry.getKey(), result);
+            entry.getValue().close();
         }
         
         this.hasCompleted = true;
@@ -54,7 +55,8 @@ public class BenchmarkImpl<T> implements Benchmark {
 
         this.operations.forEach(op -> {
             final double executionTime = this.executeOperationAndGetExecutionTime(service, op);
-            result.addMeasurement(BenchmarkResult.Measurement.create(op.getOperation(), executionTime));
+            final var newMeasurement = BenchmarkResult.Measurement.create(op.getOperation(), executionTime);
+            result.addMeasurement(newMeasurement);
         });
 
         return result;
