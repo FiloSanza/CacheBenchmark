@@ -43,7 +43,7 @@ public class BenchmarkResultImpl implements BenchmarkResult {
 
     private DoubleStream getMeasurementsAsFilteredDoubleStream(OperationType operation) {
         return measurements.stream()
-            .filter(operation::equals)
+            .filter(measurement -> measurement.getOperationType().equals(operation))
             .mapToDouble(Measurement::getValue);
     }
 }
