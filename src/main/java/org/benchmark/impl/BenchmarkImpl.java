@@ -61,6 +61,26 @@ public class BenchmarkImpl<T> implements Benchmark {
     }
 
     private double executeOperationAndGetExecutionTime(Cache service, Operation<T> operation) {
-        return 0.0;
+        double start = 0, end = 0;
+
+        switch (operation.getOperation()) {
+            case GET:
+                start = System.currentTimeMillis();
+                final var obj = service.get(operation.getKey());
+                end = System.currentTimeMillis();
+                break;
+            case PUT:
+                start = System.currentTimeMillis();
+                service.put(operation.getKey(), operation.getObject());
+                end = System.currentTimeMillis();
+                break;
+            case INVALIDATE:
+                start = System.currentTimeMillis();
+                service.remove(operation.getKey());
+                end = System.currentTimeMillis();
+                break;
+        }
+
+        return (end - start) / 1000.0;
     }
 }
