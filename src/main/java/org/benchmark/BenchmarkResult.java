@@ -31,4 +31,33 @@ public interface BenchmarkResult {
      * @return The maximum execution time as double in seconds.
      */
     double getMaxExecutionTimeForOperation(OperationType operation);
+
+    /**
+     * Represent a new measurement for the benchmark.
+     */
+    class Measurement {
+        private final OperationType operation;
+        private final double value;
+
+        private Measurement(final OperationType operation, final double value) {
+            this.operation = operation;
+            this.value = value;
+        }
+
+        /**
+         * Get the {@link OperationType}.
+         * @return the operation type.
+         */
+        public OperationType getOperationType() {
+            return operation;
+        }
+
+        /**
+         * Get the measured seconds as double.
+         * @return measured seconds.
+         */
+        public double getValue() {
+            return value;
+        }
+    }
 }
