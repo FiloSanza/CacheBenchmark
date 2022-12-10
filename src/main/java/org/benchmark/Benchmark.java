@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import javax.cache.Cache;
 import java.util.Map;
 
-public interface Benchmark {
+public interface Benchmark<T> {
 
     /**
      * Runs the benchmark and marks it as completed once it ends.
@@ -21,15 +21,15 @@ public interface Benchmark {
     /**
      * Returns a {@link Map} where the key is a String that identifies a {@link Cache} provider instance.
      *
-     * @return
+     * @return a map with the cache providers.
      */
-    Map<String, Cache> getProviders();
+    Map<String, Cache<String, T>> getProviders();
 
     /**
      * Returns the benchmark results as a {@link Map}.
      * The key is the string label associated to the cache provider, the value is a {@link BenchmarkResult} object.
      *
-     * @return a {@link Map} contaning {@link BenchmarkResult} for each {@link Cache Cache} provider instance.
+     * @return a {@link Map} containing {@link BenchmarkResult} for each {@link Cache Cache} provider instance.
      */
     Map<String, BenchmarkResult> getResults();
 
@@ -81,8 +81,8 @@ public interface Benchmark {
          * @return A new {@link Operation} object.
          * @param <T> Type of the object put/retrieved/invalidated by the operation.
          */
-        public static <T> Operation create(final OperationType operation, final String key, @Nullable final T object) {
-            return new Operation(operation, key, object);
+        public static <T> Operation<T> create(final OperationType operation, final String key, @Nullable final T object) {
+            return new Operation<>(operation, key, object);
         }
     }
 }

@@ -10,7 +10,7 @@ import org.benchmark.BenchmarkResult;
 
 public class BenchmarkImpl<T> implements Benchmark {
 
-    private final Map<String, Cache> cacheProviders;
+    private final Map<String, Cache<String, T>> cacheProviders;
     private final Map<String, BenchmarkResult> results
             = new HashMap<>();
 
@@ -18,7 +18,7 @@ public class BenchmarkImpl<T> implements Benchmark {
 
     private boolean hasCompleted = false;
 
-    public BenchmarkImpl(final Map<String, Cache> cacheServices, final List<Benchmark.Operation<T>> operations) {
+    public BenchmarkImpl(final Map<String, Cache<String, T>> cacheServices, final List<Benchmark.Operation<T>> operations) {
         this.cacheProviders = Map.copyOf(cacheServices);
         this.operations = List.copyOf(operations);
     }
@@ -40,7 +40,7 @@ public class BenchmarkImpl<T> implements Benchmark {
     }
 
     @Override
-    public Map<String, Cache> getProviders() {
+    public Map<String, Cache<String, T>> getProviders() {
         return this.cacheProviders;
     }
 
@@ -49,7 +49,7 @@ public class BenchmarkImpl<T> implements Benchmark {
         return results;
     }
 
-    private BenchmarkResult runBenchmarkOnCacheService(Cache service) {
+    private BenchmarkResult runBenchmarkOnCacheService(Cache<String, T> service) {
         final var result = new BenchmarkResultImpl();
 
         this.operations.forEach(op -> {
@@ -60,7 +60,7 @@ public class BenchmarkImpl<T> implements Benchmark {
         return result;
     }
 
-    private double executeOperationAndGetExecutionTime(Cache service, Operation<T> operation) {
+    private double executeOperationAndGetExecutionTime(Cache<String, T> service, Operation<T> operation) {
         double start = 0, end = 0;
 
         switch (operation.getOperation()) {
