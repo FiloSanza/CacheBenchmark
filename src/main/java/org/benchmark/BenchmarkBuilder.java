@@ -16,7 +16,7 @@ public interface BenchmarkBuilder<T> {
      * @param provider the {@link Cache} object.
      * @return this
      */
-    BenchmarkBuilder addCacheProvider(final String name, final Cache<String, T> provider);
+    BenchmarkBuilder<T> addCacheProvider(final String name, final Cache<String, T> provider);
 
     /**
      * Sets the benchmarks operations.
@@ -25,7 +25,7 @@ public interface BenchmarkBuilder<T> {
      * @return this
      * @throws OperationsAlreadySetException if the operation array has already been created.
      */
-    BenchmarkBuilder setOperations(final List<Benchmark.Operation<T>> operations)
+    BenchmarkBuilder<T> setOperations(final List<Benchmark.Operation<T>> operations)
         throws OperationsAlreadySetException;
 
     /**
@@ -37,16 +37,16 @@ public interface BenchmarkBuilder<T> {
      * @throws BenchmarkTypeNotSupportedException if there is no implementation for the benchmark type passed.
      * @throws OperationsAlreadySetException if the operation array has already been created.
      */
-    BenchmarkBuilder createOperations(final int numberOfObjects, BenchmarkType type)
+    BenchmarkBuilder<T> createOperations(final int numberOfObjects, BenchmarkType type)
         throws BenchmarkTypeNotSupportedException, OperationsAlreadySetException, ObjectProviderMissingException;
 
     /**
      * Set the object provider used to create the object for {@link Benchmark.Operation}.
      *
-     * @param objectProvider
+     * @param objectProvider the object provider
      * @return this
      */
-    BenchmarkBuilder setObjectProvider(final BenchmarkObjectProvider<T> objectProvider);
+    BenchmarkBuilder<T> setObjectProvider(final BenchmarkObjectProvider<T> objectProvider);
 
     /**
      * Build the {@link Benchmark} object.
@@ -54,5 +54,5 @@ public interface BenchmarkBuilder<T> {
      * @return the configured {@link Benchmark}.
      * @throws BenchmarkBuilderException if some fields are missing.
      */
-    Benchmark build() throws BenchmarkBuilderException;
+    Benchmark<T> build() throws BenchmarkBuilderException;
 }
