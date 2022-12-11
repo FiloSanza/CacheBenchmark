@@ -2,6 +2,7 @@ package org.benchmark.impl;
 
 import org.benchmark.BenchmarkResult;
 import org.benchmark.OperationType;
+import org.benchmark.SerializationStats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.stream.DoubleStream;
 public class BenchmarkResultImpl implements BenchmarkResult {
     private final List<Measurement> measurements
         = new ArrayList<>();
+
+    private SerializationStats serializationStats = null;
 
     public BenchmarkResultImpl() {
 
@@ -21,24 +24,34 @@ public class BenchmarkResultImpl implements BenchmarkResult {
     }
 
     @Override
+    public void setSerializationStats(SerializationStats stats) {
+        this.serializationStats = stats;
+    }
+
+    @Override
     public double getAvgExecutionTimeForOperation(OperationType operation) {
         return this.getMeasurementsAsFilteredDoubleStream(operation)
                 .average()
-                .getAsDouble();
+                .orElse(0.0);
     }
 
     @Override
     public double getMinExecutionTimeForOperation(OperationType operation) {
         return this.getMeasurementsAsFilteredDoubleStream(operation)
                 .min()
-                .getAsDouble();
+                .orElse(Double.MAX_VALUE);
     }
 
     @Override
     public double getMaxExecutionTimeForOperation(OperationType operation) {
         return this.getMeasurementsAsFilteredDoubleStream(operation)
                 .max()
-                .getAsDouble();
+                .orElse(Double.MIN_VALUE);
+    }
+
+    @Override
+    public SerializationStats getSerializationStats() {
+        return this.serializationStats;
     }
 
     private DoubleStream getMeasurementsAsFilteredDoubleStream(OperationType operation) {

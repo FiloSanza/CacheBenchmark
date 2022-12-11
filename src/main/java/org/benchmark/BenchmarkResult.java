@@ -1,5 +1,9 @@
 package org.benchmark;
 
+import org.benchmark.impl.SerializationStatsImpl;
+
+import java.io.Serial;
+
 public interface BenchmarkResult {
     /**
      * Add a new measurement to this {@link BenchmarkResult}.
@@ -7,6 +11,13 @@ public interface BenchmarkResult {
      * @param measurement
      */
     void addMeasurement(Measurement measurement);
+
+    /**
+     * Set the serialization stats for this result.
+     *
+     * @param stats the serialization stats.
+     */
+    void setSerializationStats(SerializationStats stats);
 
     /**
      * Get the average execution time for the specified {@link OperationType operation}.
@@ -31,6 +42,13 @@ public interface BenchmarkResult {
      * @return The maximum execution time as double in seconds.
      */
     double getMaxExecutionTimeForOperation(OperationType operation);
+
+    /**
+     * Return the serialization stats.
+     *
+     * @return the stats.
+     */
+    SerializationStats getSerializationStats();
 
     /**
      * Represent a new measurement for the benchmark.

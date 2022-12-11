@@ -27,7 +27,9 @@ public class BenchmarkImpl<T> implements Benchmark {
     @Override
     public void run() {
         for (final var entry : this.cacheProviders.entrySet()) {
+            SerializationStatsImpl.newInstance();
             final var result = this.runBenchmarkOnCacheService(entry.getValue());
+            result.setSerializationStats(SerializationStatsImpl.getInstance());
             this.results.put(entry.getKey(), result);
             entry.getValue().close();
         }
@@ -53,8 +55,11 @@ public class BenchmarkImpl<T> implements Benchmark {
     private BenchmarkResult runBenchmarkOnCacheService(Cache<String, T> service) {
         final var result = new BenchmarkResultImpl();
 
+        // Clear the cache to avoid skewed data from previous runs.
+        service.clear();
+
         this.operations.forEach(op -> {
-            final double executionTime = this.executeOperationAndGetExecutionTime(service, op);
+            final double executionTime = this.executeOperationAndGetExecutionTimeInSeconds(service, op);
             final var newMeasurement = BenchmarkResult.Measurement.create(op.getOperation(), executionTime);
             result.addMeasurement(newMeasurement);
         });
@@ -62,7 +67,7 @@ public class BenchmarkImpl<T> implements Benchmark {
         return result;
     }
 
-    private double executeOperationAndGetExecutionTime(Cache<String, T> service, Operation<T> operation) {
+    private double executeOperationAndGetExecutionTimeInSeconds(Cache<String, T> service, Operation<T> operation) {
         double start = 0, end = 0;
 
         switch (operation.getOperation()) {
